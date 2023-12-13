@@ -6,112 +6,90 @@ using System;
 
 namespace Lab_5
 {
-    [TestFixture]
     public class TestingWebPage
     {
         private IWebDriver page;
-        private WebDriverWait webDriverWait;
         private TestingPageElements testingPage;
 
         [SetUp]
         public void Setup()
         {
             page = new ChromeDriver();
-            webDriverWait = new WebDriverWait(page, TimeSpan.FromSeconds(10));
+            page.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
             testingPage = new TestingPageElements(page);
             page.Navigate().GoToUrl("https://www.globalsqa.com/angularJs-protractor/SimpleCalculator/");
         }
 
-        [Test]
-        public void NullAandBTest()
+        [TestCase("19", "21", "40")]
+        [TestCase("97", "fgfd", "null")]
+        [TestCase("83", "21,12", "null")]
+        [TestCase("38", "0", "38")]
+        [TestCase("4000000000000000000000", "512", "4e+21")]
+        [TestCase("6800.782", "199.218", "7000")]
+        [TestCase("-5481.75", "731.55", "-4750.2")]
+        [TestCase("-16578.8431", "-421.1569", "-17000")]
+        public void APlusBTest(string a, string b, string result)
         {
-            testingPage.EnterValueA("");
+            testingPage.EnterValueA(a);
             testingPage.SelectOperation("+");
-            testingPage.EnterValueB("");
+            testingPage.EnterValueB(b);
 
-            Assert.AreEqual("null", testingPage.GetResult());
+            Assert.AreEqual(result, testingPage.GetResult());
         }
 
-        [Test]
-        public void ZeroAPlusBTest()
+        [TestCase("124", "23", "101")]
+        [TestCase("1313", "%ij", "null")]
+        [TestCase("29087", "517,80", "null")]
+        [TestCase("548", "0", "548")]
+        [TestCase("80000000000000000000000000000000000000", "13690", "8e+37")]
+        [TestCase("43520.427", "520.327", "43000.100000000006")]
+        [TestCase("-12372.086", "627.914", "-13000")]
+        [TestCase("-517.5", "-67.25", "-450.25")]
+        public void AMinusBTest(string a, string b, string result)
         {
-            testingPage.EnterValueA("0");
-            testingPage.SelectOperation("+");
-            testingPage.EnterValueB("0");
-
-            Assert.AreEqual("0", testingPage.GetResult());
-        }
-
-        [Test]
-        public void ZeroAMinusBTest()
-        {
-            testingPage.EnterValueA("0");
+            testingPage.EnterValueA(a);
             testingPage.SelectOperation("-");
-            testingPage.EnterValueB("0");
+            testingPage.EnterValueB(b);
 
-            Assert.AreEqual("0", testingPage.GetResult());
+            Assert.AreEqual(result, testingPage.GetResult());
         }
 
-        [Test]
-        public void ZeroAMultiplyBTest()
+        [TestCase("12", "12", "144")]
+        [TestCase("5780", "/(tu)", "null")]
+        [TestCase("67431", "1217,0065", "null")]
+        [TestCase("954", "0", "0")]
+        [TestCase("9000000000000000000578374567263546000000000000", "8764466671182747476165241524617346876176321256564", "7.888020004064472e+94")]
+        [TestCase("7690.271", "269.0012", "2068692.1273251998")]
+        [TestCase("-15338.472", "1978.001", "-30339512.954471998")]
+        [TestCase("-553.097", "-2284.741", "1263683.392877")]
+        public void AMultiplyBTest(string a, string b, string result)
         {
-            testingPage.EnterValueA("0");
+            testingPage.EnterValueA(a);
             testingPage.SelectOperation("*");
-            testingPage.EnterValueB("0");
+            testingPage.EnterValueB(b);
 
-            Assert.AreEqual("0", testingPage.GetResult());
+            Assert.AreEqual(result, testingPage.GetResult());
         }
 
-        [Test]
-        public void ZeroADivideBTest()
+        [TestCase("546", "26", "21")]
+        [TestCase("7318", "*fd!", "null")]
+        [TestCase("18547", "341,2", "null")]
+        [TestCase("725", "0", "null")]
+        [TestCase("6000000000000000000000000000000000000000000000", "300000000000000000", "2e+28")]
+        [TestCase("423857.5286", "728.1567", "582.0965852542454")]
+        [TestCase("-690142.4017", "13778.2017", "-50.08943958920271")]
+        [TestCase("-243.27", "-81.9", "2.9703296703296704")]
+        public void ADivideBTest(string a, string b, string result)
         {
-            testingPage.EnterValueA("0");
+            testingPage.EnterValueA(a);
             testingPage.SelectOperation("/");
-            testingPage.EnterValueB("0");
+            testingPage.EnterValueB(b);
 
-            Assert.AreEqual("null", testingPage.GetResult());
-        }
-
-        public void NotZeroAPlusBTest()
-        {
-            testingPage.EnterValueA("8");
-            testingPage.SelectOperation("+");
-            testingPage.EnterValueB("22");
-
-            Assert.AreEqual("30", testingPage.GetResult());
+            Assert.AreEqual(result, testingPage.GetResult());
         }
 
         [Test]
-        public void NotZeroAMinusBTest()
-        {
-            testingPage.EnterValueA("90");
-            testingPage.SelectOperation("-");
-            testingPage.EnterValueB("18");
-
-            Assert.AreEqual("72", testingPage.GetResult());
-        }
-
-        [Test]
-        public void NotZeroAMultiplyBTest()
-        {
-            testingPage.EnterValueA("20");
-            testingPage.SelectOperation("*");
-            testingPage.EnterValueB("10");
-
-            Assert.AreEqual("200", testingPage.GetResult());
-        }
-
-        [Test]
-        public void NotZeroADivideBTest()
-        {
-            testingPage.EnterValueA("10");
-            testingPage.SelectOperation("/");
-            testingPage.EnterValueB("2");
-
-            Assert.AreEqual("5", testingPage.GetResult());
-        }
-
-        public void NotZeroAPlusBTestIncrementDecrement()
+        public void APlusBTestIncrementDecrement()
         {
             testingPage.EnterValueA("7");
             testingPage.DecrementA();
@@ -119,11 +97,11 @@ namespace Lab_5
             testingPage.EnterValueB("0");
             testingPage.IncrementB();
 
-            Assert.AreEqual("6", testingPage.GetResult());
+            Assert.AreEqual("7", testingPage.GetResult());
         }
 
         [Test]
-        public void NotZeroAMinusBTestIncrementDecrement()
+        public void AMinusBTestIncrementDecrement()
         {
             testingPage.EnterValueA("23");
             testingPage.DecrementA();
@@ -135,7 +113,7 @@ namespace Lab_5
         }
 
         [Test]
-        public void NotZeroAMultiplyBTestIncrementDecrement()
+        public void AMultiplyBTestIncrementDecrement()
         {
             testingPage.EnterValueA("7");
             testingPage.DecrementA();
@@ -147,7 +125,7 @@ namespace Lab_5
         }
 
         [Test]
-        public void NotZeroADivideBTestIncrementDecrement()
+        public void ADivideBTestIncrementDecrement()
         {
             testingPage.EnterValueA("7");
             testingPage.DecrementA();
@@ -159,16 +137,7 @@ namespace Lab_5
         }
 
         [Test]
-        public void DivideZero()
-        {
-            testingPage.EnterValueA("17");
-            testingPage.SelectOperation("/");
-            testingPage.EnterValueB("0");
-
-            Assert.AreEqual("null", testingPage.GetResult());
-        }
-
-        public void NegativePlusTestIncrementDecrement()
+        public void NegativeAPlusBTestIncrementDecrement()
         {
             testingPage.EnterValueA("-15");
             testingPage.DecrementA();
@@ -176,11 +145,11 @@ namespace Lab_5
             testingPage.EnterValueB("6");
             testingPage.IncrementB();
 
-            Assert.AreEqual("-7", testingPage.GetResult());
+            Assert.AreEqual("-9", testingPage.GetResult());
         }
 
         [Test]
-        public void NegativeMinusTestIncrementDecrement()
+        public void NegativeAMinusBTestIncrementDecrement()
         {
             testingPage.EnterValueA("-16");
             testingPage.DecrementA();
@@ -188,11 +157,11 @@ namespace Lab_5
             testingPage.EnterValueB("14");
             testingPage.IncrementB();
 
-            Assert.AreEqual("-30", testingPage.GetResult());
+            Assert.AreEqual("-32", testingPage.GetResult());
         }
 
         [Test]
-        public void NegativeMultiplyTestIncrementDecrement()
+        public void NegativeAMultiplyBTestIncrementDecrement()
         {
             testingPage.EnterValueA("-12");
             testingPage.DecrementA();
@@ -200,11 +169,11 @@ namespace Lab_5
             testingPage.EnterValueB("10");
             testingPage.IncrementB();
 
-            Assert.AreEqual("-121", testingPage.GetResult());
+            Assert.AreEqual("-143", testingPage.GetResult());
         }
 
         [Test]
-        public void NegativeDivideTestIncrementDecrement()
+        public void NegativeADivideBTestIncrementDecrement()
         {
             testingPage.EnterValueA("-27");
             testingPage.DecrementA();
@@ -212,10 +181,11 @@ namespace Lab_5
             testingPage.EnterValueB("1");
             testingPage.IncrementB();
 
-            Assert.AreEqual("-13", testingPage.GetResult());
+            Assert.AreEqual("-14", testingPage.GetResult());
         }
 
-        public void DecimalPlusTestIncrementDecrement()
+        [Test]
+        public void DecimalAPlusBTestIncrementDecrement()
         {
             testingPage.EnterValueA("4.27");
             testingPage.DecrementA();
@@ -223,11 +193,11 @@ namespace Lab_5
             testingPage.EnterValueB("-2.17");
             testingPage.IncrementB();
 
-            Assert.AreEqual("0.1", testingPage.GetResult());
+            Assert.AreEqual("2.0999999999999996", testingPage.GetResult());
         }
 
         [Test]
-        public void DecimalMinusTestIncrementDecrement()
+        public void DecimalAMinusBTestIncrementDecrement()
         {
             testingPage.EnterValueA("8.76");
             testingPage.DecrementA();
@@ -235,11 +205,11 @@ namespace Lab_5
             testingPage.EnterValueB("2.23");
             testingPage.IncrementB();
 
-            Assert.AreEqual("10.99", testingPage.GetResult());
+            Assert.AreEqual("4.529999999999999", testingPage.GetResult());
         }
 
         [Test]
-        public void DecimalMultiplyTestIncrementDecrement()
+        public void DecimalAMultiplyBTestIncrementDecrement()
         {
             testingPage.EnterValueA("-5.25");
             testingPage.DecrementA();
@@ -247,11 +217,11 @@ namespace Lab_5
             testingPage.EnterValueB("-4");
             testingPage.IncrementB();
 
-            Assert.AreEqual("21.25", testingPage.GetResult());
+            Assert.AreEqual("18.75", testingPage.GetResult());
         }
 
         [Test]
-        public void DecimalDivideTestIncrementDecrement()
+        public void DecimalADivideBTestIncrementDecrement()
         {
             testingPage.EnterValueA("8.28");
             testingPage.DecrementA();
@@ -259,7 +229,7 @@ namespace Lab_5
             testingPage.EnterValueB("6.07");
             testingPage.IncrementB();
 
-            Assert.AreEqual("-1.02", testingPage.GetResult());
+            Assert.AreEqual("1.0297029702970295", testingPage.GetResult());
         }
 
         [TearDown]
